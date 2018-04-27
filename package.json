@@ -1,0 +1,20 @@
+{
+  "name": "nopal",
+  "version": "0.0.0",
+  "description": "My new portfolio, coming soon.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Triforcey/nopal.git"
+  },
+  "author": "JD F",
+  "license": "GPL-3.0+",
+  "bugs": {
+    "url": "https://github.com/Triforcey/nopal/issues"
+  },
+  "homepage": "https://github.com/Triforcey/nopal#readme"
+}
