@@ -1,8 +1,8 @@
 var fs = require('fs');
 var browserify = require('browserify');
 var path = require('path');
-if (!fs.existsSync('public/scripts')) {
-  fs.mkdirSync('public/scripts');
+if (!fs.existsSync('public')) {
+  fs.mkdirSync('public');
 }
 function compileScripts(dir) {
   if (!fs.existsSync(path.join('public', dir))) {
