@@ -17,7 +17,9 @@ function compileScripts(dir) {
         compileScripts(file);
         return;
       }
-      var b = browserify();
+      var b = browserify(file, {
+        debug: process.env.NODE_ENV != 'production'
+      });
       b.add(file);
       var out = fs.createWriteStream(path.join('public', file));
       b.bundle().pipe(out);
