@@ -7,7 +7,7 @@
     "start": "node index.js",
     "build": "node build.js",
     "install": "npm run build",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "nodemon"
   },
   "repository": {
     "type": "git",
@@ -25,7 +25,17 @@
     "react-dom": "^16.3.2"
   },
   "devDependencies": {
-    "nodemon": "^1.17.3",
-    "watchify": "^3.11.0"
+    "nodemon": "^1.17.3"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      ".git",
+      "node_modules/**/node_modules",
+      "public"
+    ],
+    "execMap": {
+      "js": "npm run build && node"
+    },
+    "ext": "js,json"
   }
 }
