@@ -4,7 +4,6 @@ var mustacheExpress = require('mustache-express');
 app.engine('mustache', mustacheExpress());
 app.set('view engine', 'mustache');
 var server = require('http').createServer(app);
-
 var React = require('react');
 var reactDOMServer = require('react-dom/server');
 var Clock = require('./components/clock.js');
