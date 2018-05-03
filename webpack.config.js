@@ -1,4 +1,3 @@
-var webpack = require('webpack');
 var merge = require('webpack-merge');
 var dev = require('./webpack.dev.js');
 var prod = require('./webpack.prod.js');
@@ -23,12 +22,7 @@ var config = {
         }
       }
     ]
-  },
-  plugins: [
-    new webpack.DefinePlugin({
-      'process.env.NODE_ENV': '\'process.env.NODE_ENV\''
-    })
-  ]
+  }
 };
 
 module.exports = merge(production ? prod : dev, config);
