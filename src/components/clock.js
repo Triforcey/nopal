@@ -12,7 +12,7 @@ module.exports = class Clock extends React.Component {
       self.setState({
         date: Date.now()
       });
-    }, 1000);
+    }, 1);
   }
   componentWillUmount() {
     clearInterval(this.timerId);
