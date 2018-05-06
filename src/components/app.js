@@ -2,7 +2,7 @@ var React = require('react');
 var Home = require('./home.js');
 var Clock = require('./clock.js');
 var {BrowserRouter, Route, Link} = require('react-router-dom');
-module.exports = class Navigator extends React.Component {
+module.exports = class App extends React.Component {
   render() {
     return (
       <div>
