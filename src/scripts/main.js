@@ -1,6 +1,8 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
-var Clock = require('../components/clock.js');
+/*var Clock = require('../components/clock.js');
 clock.innerHTML = '';
 ReactDOM.render(<Clock />, clock);
-console.log(process.env.NODE_ENV);
+*/
+var Router = require('../components/router.js');
+ReactDOM.hydrate(<Router />, router);

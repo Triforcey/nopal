@@ -14,12 +14,12 @@ module.exports = class Clock extends React.Component {
       });
     }, 1);
   }
-  componentWillUmount() {
+  componentWillUnmount() {
     clearInterval(this.timerId);
   }
   render() {
     return (
-      <p>Hello world! {this.state.date}</p>
+      <p suppressHydrationWarning={true}>{this.state.date}</p>
     );
   }
 }

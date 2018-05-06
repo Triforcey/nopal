@@ -27,6 +27,8 @@
     "mustache-express": "^1.2.5",
     "react": "^16.3.2",
     "react-dom": "^16.3.2",
+    "react-router": "^4.2.0",
+    "react-router-dom": "^4.2.2",
     "uglifyjs-webpack-plugin": "^1.2.5",
     "webpack": "^4.6.0",
     "webpack-cli": "^2.1.2",
@@ -43,6 +45,6 @@
     "execMap": {
       "js": "npm run build && node"
     },
-    "ext": "js,json"
+    "ext": "js,json,mustache"
   }
 }
