@@ -4,7 +4,7 @@ var prod = require('./webpack.prod.js');
 var path = require('path');
 var production = process.env.NODE_ENV == 'production';
 var config = {
-  entry: './src/scripts/main.js',
+  entry: './src/client/main.js',
   output: {
     filename: 'bundle.js',
     path: path.join(__dirname, 'public/scripts')

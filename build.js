@@ -43,7 +43,6 @@ function compileScripts(dir, out, pack) {
   });
 }
 
-mkdir('public');
 mkdir('dist');
-compileScript('src/index.js', 'dist/index.js');
+compileScripts('src/server', 'dist/server');
 compileScripts('src/components', 'dist/components');

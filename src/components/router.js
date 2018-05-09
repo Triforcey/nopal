@@ -9,4 +9,4 @@ module.exports = class Router extends React.Component {
       </BrowserRouter>
     );
   }
-}
+};

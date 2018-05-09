@@ -22,4 +22,4 @@ module.exports = class Clock extends React.Component {
       <p suppressHydrationWarning={true}>{this.state.date}</p>
     );
   }
-}
+};

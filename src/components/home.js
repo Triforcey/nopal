@@ -5,4 +5,4 @@ module.exports = class Home extends React.Component {
       <p>Hello world!!!</p>
     );
   }
-}
+};
