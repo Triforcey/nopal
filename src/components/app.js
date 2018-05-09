@@ -35,11 +35,14 @@ class App extends React.Component {
           <li><Link to='/clock'>Clock</Link></li>
         </ul>
         <Route component={() => (
-          <div>{typeof this.state.data != 'undefined' ? this.state.data : 'loading'}</div>
+          <p>{typeof this.state.data != 'undefined' ? this.state.data : '...'}</p>
         )} />
         <Switch>
-          <Route path='/' component={Home} />
+          <Route exact path='/' component={Home} />
           <Route path='/clock' component={Clock} />
+          <Route component={() => (
+            <p>404</p>
+          )} />
         </Switch>
       </div>
     );
