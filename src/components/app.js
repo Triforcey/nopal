@@ -16,6 +16,8 @@ class App extends React.Component {
         data: undefined
       });
       fetch(path.join('/api', location.pathname)).then((res) => {
+        // prevents race conditions
+        if (window.location.pathname != location.pathname) return;
         res.json().then((data) => {
           this.setState({
             data: data
