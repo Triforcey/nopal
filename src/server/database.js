@@ -6,31 +6,34 @@ function setObjectId(object) {
   try {
     object._id = new ObjectID(object._id);
   } catch (e) {
-    console.error(e);
     return null;
   }
   return object;
 }
 
-exports.connect = (options, callback) => {
-  var {url, dbName} = options;
-  if (typeof url == 'undefined') url = 'mongodb://localhost';
-  if (typeof dbName == 'undefined') dbName = 'nopal';
-  MongoClient.connect(url, (err, client) => {
-    if (err) throw err;
-    db = client.db(dbName);
-    if (callback) callback();
+exports.connect = options => {
+  return new Promise((resolve, reject) => {
+    var {url, dbName} = options;
+    if (typeof url == 'undefined') url = 'mongodb://localhost';
+    if (typeof dbName == 'undefined') dbName = 'nopal';
+    MongoClient.connect(url).then((client) => {
+      db = client.db(dbName);
+      resolve(db);
+    });
   });
 };
 
-exports.saveUser = async (user, callback) => {
-  await db.collection('users').save(user);
-  if (callback) callback();
+exports.saveUser = user => {
+  return new Promise((resolve, reject) => {
+    db.collection('users').save(user).then(resolve);
+  });
 };
 
-exports.getUser = async (user, callback) => {
-  user = setObjectId(user);
-  if (user === null) return;
-  var user = await db.collection('users').findOne(user);
-  if (callback) callback(user);
+exports.getUser = user => {
+  return new Promise((resolve, reject) => {
+    var objectId = user._id;
+    user = setObjectId(user);
+    if (user == null) reject(new Error(`Invalid ObjectID: ${objectId}`));
+    db.collection('users').findOne(user).then(resolve);
+  });
 };

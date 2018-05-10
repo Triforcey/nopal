@@ -8,18 +8,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 var session = require('express-session');
-app.use(session({
-  secret: 'keyboard cat',
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
-    secure: false
-  }
-}));
+var MongoStore = require('connect-mongo')(session);
 
 var db = require('./database.js');
 var auth = require('./auth.js');
-auth.init(app);
 
 var mustacheExpress = require('mustache-express');
 app.engine('mustache', mustacheExpress());
@@ -36,44 +28,58 @@ var api = require('./api.js');
 
 var port = process.env.PORT || 3000;
 
-app.use(express.static('public'));
-
-app.use('/api', (req, res) => {
-  api(req.path).then(data => {
-    res.json(data);
-  });
-});
-
-app.get('*', function (req, res) {
-  api(req.path).then(data => {
-    var context = {};
-    var router = reactDOMServer.renderToString(
-      <StaticRouter location={req.url} context={context}>
-        <App data={data} />
-      </StaticRouter>
-    );
-    if (context.url) {
-      res.redirect(context.status, context.url);
-    }
-    res.render('index', {
-      router: router
-    });
-  });
-});
-
-app.use((req, res, next) => {
-  res.status(404).send('404');
-});
-
-app.use((err, req, res, next) => {
-  console.error(err);
-  res.status(500).send('500');
-});
-
 db.connect({
   url: process.env.DB_URL,
   dbName: process.env.DB_NAME
-}, () => {
+}).then(db => {
+  app.use(session({
+    secret: 'keyboard cat',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      secure: false
+    },
+    store: new MongoStore({
+      db: db
+    })
+  }));
+
+  app.use(express.static('public'));
+
+  auth.init(app);
+
+  app.use('/api', (req, res) => {
+    api(req).then(data => {
+      res.json(data);
+    });
+  });
+
+  app.get('*', function (req, res) {
+    api(req).then(data => {
+      var context = {};
+      var router = reactDOMServer.renderToString(
+        <StaticRouter location={req.url} context={context}>
+          <App data={data} />
+        </StaticRouter>
+      );
+      if (context.url) {
+        res.redirect(context.status, context.url);
+      }
+      res.render('index', {
+        router: router
+      });
+    });
+  });
+
+  app.use((req, res, next) => {
+    res.status(404).send('404');
+  });
+
+  app.use((err, req, res, next) => {
+    console.error(err);
+    res.status(500).send('500');
+  });
+
   server.listen(port, function () {
     console.log(`Listening on port ${port}!`);
   });

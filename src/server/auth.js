@@ -8,7 +8,11 @@ exports.init = app => {
   app.use(passport.session());
 
   passport.use(new LocalStategy((username, password, done) => {
-    db.getUser({username: username}, user => {
+    db.getUser({username: username}).then(user => {
+      if (user == null) {
+        done(null, false);
+        return;
+      }
       if (password != user.password) {
         done(null, false);
       }
@@ -21,28 +25,26 @@ exports.init = app => {
   });
 
   passport.deserializeUser(function(id, done) {
-    db.getUser({_id: id}, user => {
+    db.getUser({_id: id}).then(user => {
       done(null, user);
     });
   });
 
   app.post('/signup', (req, res, next) => {
     if (!validate.signup(req.body)) {
-      res.redirect('/');
+      res.status(401).end();
       return;
     }
-    db.saveUser(req.body, () => {
+    db.saveUser(req.body).then(() => {
       next();
     });
-  }, passport.authenticate('local', {
-    successRedirect: '/clock',
-    failureRedirect: '/'
-  }));
+  }, passport.authenticate('local'), (req, res) => {
+    res.end();
+  });
 
-  app.post('/login', passport.authenticate('local', {
-    successRedirect: '/clock',
-    failureRedirect: '/'
-  }));
+  app.post('/login', passport.authenticate('local'), (req, res) => {
+    res.end();
+  });
 
   app.get('/logout', (req, res) => {
     req.logout();
