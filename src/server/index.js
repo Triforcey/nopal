@@ -1,4 +1,5 @@
 var path = require('path');
+var db = require('./database.js');
 
 var express = require('express');
 var app = express();
@@ -8,9 +9,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 var session = require('express-session');
+
 var MongoStore = require('connect-mongo')(session);
 
-var db = require('./database.js');
 var auth = require('./auth.js');
 
 var mustacheExpress = require('mustache-express');

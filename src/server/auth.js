@@ -3,6 +3,17 @@ var LocalStategy = require('passport-local').Strategy;
 var db = require('./database.js');
 var validate = require('./validate.js');
 
+function login(req, res, next) {
+  passport.authenticate('local', (err, user, info) => {
+    if (err) return next(err);
+    if (!user) return res.status(401).json(info);
+    req.login(user, err => {
+      if (err) return next(err);
+      res.end();
+    });
+  })(req, res, next);
+}
+
 exports.init = app => {
   app.use(passport.initialize());
   app.use(passport.session());
@@ -10,11 +21,11 @@ exports.init = app => {
   passport.use(new LocalStategy((username, password, done) => {
     db.getUser({username: username}).then(user => {
       if (user == null) {
-        done(null, false);
+        done(null, false, { message: 'Invalid username' });
         return;
       }
       if (password != user.password) {
-        done(null, false);
+        done(null, false, { message: 'Incorrect password' });
       }
       done(null, user);
     });
@@ -42,9 +53,7 @@ exports.init = app => {
     res.end();
   });
 
-  app.post('/login', passport.authenticate('local'), (req, res) => {
-    res.end();
-  });
+  app.post('/login', login);
 
   app.get('/logout', (req, res) => {
     req.logout();

@@ -5,7 +5,8 @@ class Login extends React.Component {
     super(props);
     this.state = {
       name: '',
-      pwd: ''
+      pwd: '',
+      err: ''
     };
     this.handleChange = this.handleChange.bind(this);
     this.signup = this.signup.bind(this);
@@ -27,7 +28,12 @@ class Login extends React.Component {
       },
       credentials: 'same-origin'
     }).then(res => {
-      if (res.status != 200) return;
+      if (res.status != 200) {
+        res.json().then(data => this.setState({
+          err: data.message
+        }));
+        return;
+      };
       this.props.history.push('/');
     });
   }
@@ -37,6 +43,7 @@ class Login extends React.Component {
         <input name='name' value={this.state.name} onChange={this.handleChange} />
         <input name='pwd' type='password' value={this.state.pwd} onChange={this.handleChange} />
         <button onClick={this.signup}>Login</button>
+        <p>{this.state.err}</p>
       </div>
     );
   }
