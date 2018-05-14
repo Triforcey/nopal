@@ -5,10 +5,13 @@ var express = require('express');
 var app = express();
 
 if (process.env.SECURE == 'true') {
-  app.use((req, res) => {
+  app.set('trust proxy', true);
+  app.use((req, res, next) => {
     if (req.get('X-Forwarded-Proto') == 'http') {
       res.redirect('https://' + req.get('host') + req.originalUrl);
+      return;
     }
+    next();
   });
 }
 
