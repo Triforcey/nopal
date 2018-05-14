@@ -4,6 +4,14 @@ var db = require('./database.js');
 var express = require('express');
 var app = express();
 
+if (process.env.SECURE == 'true') {
+  app.use((req, res) => {
+    if (req.get('X-Forwarded-Proto') == 'http') {
+      res.redirect('https://' + req.get('host') + req.originalUrl);
+    }
+  });
+}
+
 var bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -38,7 +46,7 @@ db.connect({
     resave: false,
     saveUninitialized: false,
     cookie: {
-      secure: false
+      secure: process.env.SECURE == 'true' ? true : false
     },
     store: new MongoStore({
       db: db
