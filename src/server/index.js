@@ -4,8 +4,14 @@ var db = require('./database.js');
 var express = require('express');
 var app = express();
 
+var helmet = require('helmet');
+
+var sessionSecret = 'keyboard cat';
+
 if (process.env.SECURE == 'true') {
+  app.use(helmet());
   app.set('trust proxy', true);
+  sessionSecret = process.env.SESSION_SECRETS.split(',');
   app.use((req, res, next) => {
     if (req.get('X-Forwarded-Proto') == 'http') {
       res.redirect('https://' + req.get('host') + req.originalUrl);
@@ -45,7 +51,7 @@ db.connect({
   dbName: process.env.DB_NAME
 }).then(db => {
   app.use(session({
-    secret: 'keyboard cat',
+    secret: sessionSecret,
     resave: false,
     saveUninitialized: false,
     cookie: {
