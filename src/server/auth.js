@@ -1,5 +1,6 @@
 var passport = require('passport');
 var LocalStategy = require('passport-local').Strategy;
+var hash = require('./hash.js');
 var db = require('./database.js');
 var validate = require('./validate.js');
 
@@ -24,10 +25,10 @@ exports.init = app => {
         done(null, false, { message: 'Invalid username' });
         return;
       }
-      if (password != user.password) {
-        done(null, false, { message: 'Incorrect password' });
-      }
-      done(null, user);
+      hash.verify(password, user.password).then(verified => {
+        if (!verified) return done(null, false, { message: 'Incorrect password' });
+        done(null, user);
+      });
     });
   }));
 
@@ -42,17 +43,29 @@ exports.init = app => {
   });
 
   app.post('/signup', (req, res, next) => {
-    if (!validate.signup(req.body)) {
-      res.status(401).end();
-      return;
+    var user = {
+      username: req.body.username,
+      password: req.body.password
+    };
+    if (!validate.signup(user)) {
+      res.status(401).json({
+        message: 'Missing credentials'
+      });
+      throw new Error('User input error');
     }
-    db.usernameTaken(req.body.username).then(taken => {
-      if (taken) return res.status(401).json({
-        message: 'Username taken'
-      });
-      db.saveUser(req.body).then(() => {
-        next();
-      });
+    db.usernameTaken(user.username).then(taken => {
+      if (taken) {
+        res.status(401).json({
+          message: 'Username taken'
+        });
+        throw new Error('User input error');
+      }
+      return hash.encrypt(user.password);
+    }).then(hash => {
+      user.password = hash;
+      db.saveUser(user).then(() => next());
+    }).catch(err => {
+      if (err.message == 'User input error') return;
     });
   }, passport.authenticate('local'), (req, res) => {
     res.end();

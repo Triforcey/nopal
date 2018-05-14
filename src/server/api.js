@@ -5,7 +5,7 @@ module.exports = (req) => {
     var path = req.path.split('/');
     path.splice(0, 1);
     if (path[0] == '' && req.user) {
-      resolve(JSON.stringify(req.user));
+      resolve(req.user.username);
       return;
     }
     content.test(req.path).then(resolve);
