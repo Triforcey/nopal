@@ -19,6 +19,7 @@ Nopal is (or going to be):
 * Efficient
   * The server doesn't make HTTP calls to itself
 * Content managed
+  * So you don't have to restart for every new page you add
 
 ## Already implemented stuff
 
