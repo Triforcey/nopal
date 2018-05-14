@@ -17,7 +17,7 @@ Nopal is (or going to be):
 * Server side rendered
   * To make extra faster
 * Efficient
-  * The server doesn't make HTTP calls to itself. (Srsly, it's not that hard.)
+  * The server doesn't make HTTP calls to itself
 * Content managed
 
 ## Already implemented stuff
