@@ -66,6 +66,7 @@ exports.init = app => {
       db.saveUser(user).then(() => next());
     }).catch(err => {
       if (err.message == 'User input error') return;
+      throw err;
     });
   }, passport.authenticate('local'), (req, res) => {
     res.end();
