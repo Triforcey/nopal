@@ -50,7 +50,7 @@ class App extends React.Component {
         <Switch>
           <Route exact path='/' component={Home} />
           <Route exact path='/login' component={Login} />
-          <Route exact path='/signup' component={Signup} />
+          <Route exact path='/signup' component={() => (<Login signup={true} />)} />
           <Route exact path='/logout' component={Logout} />
           <Route path='/clock' component={Clock} />
           <Route component={() => (

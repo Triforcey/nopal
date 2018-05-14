@@ -37,3 +37,11 @@ exports.getUser = user => {
     db.collection('users').findOne(user).then(resolve);
   });
 };
+
+exports.usernameTaken = name => {
+  return new Promise((resolve, reject) => {
+    var size = db.collection('users').find({ username: name }).limit(1).count().then(count => {
+      resolve(count ? true : false);
+    });
+  });
+};

@@ -46,8 +46,13 @@ exports.init = app => {
       res.status(401).end();
       return;
     }
-    db.saveUser(req.body).then(() => {
-      next();
+    db.usernameTaken(req.body.username).then(taken => {
+      if (taken) return res.status(401).json({
+        message: 'Username taken'
+      });
+      db.saveUser(req.body).then(() => {
+        next();
+      });
     });
   }, passport.authenticate('local'), (req, res) => {
     res.end();

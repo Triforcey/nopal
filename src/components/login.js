@@ -17,7 +17,7 @@ class Login extends React.Component {
     this.setState(newState);
   }
   signup() {
-    fetch('/login', {
+    fetch(this.props.signup ? '/signup' : '/login', {
       method: 'post',
       body: JSON.stringify({
         username: this.state.name,
@@ -42,7 +42,7 @@ class Login extends React.Component {
       <div>
         <input name='name' value={this.state.name} onChange={this.handleChange} />
         <input name='pwd' type='password' value={this.state.pwd} onChange={this.handleChange} />
-        <button onClick={this.signup}>Login</button>
+        <button onClick={this.signup}>{this.props.signup ? 'Sign Up' : 'Login'}</button>
         <p>{this.state.err}</p>
       </div>
     );
