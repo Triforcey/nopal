@@ -1,6 +1,5 @@
 var React = require('react');
 var Home = require('./home.js');
-var Signup = require('./signup.js');
 var Login = require('./login.js');
 var Logout = require('./logout.js');
 var Clock = require('./clock.js');
