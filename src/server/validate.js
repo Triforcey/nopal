@@ -20,7 +20,5 @@ exports.signup = (() => {
     ],
     additionalProperties: false
   });
-  return (user) => {
-    return validate(user);
-  };
+  return user => validate(user);
 })();

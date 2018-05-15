@@ -1,7 +1,6 @@
 var passport = require('passport');
 var LocalStategy = require('passport-local').Strategy;
 var hash = require('./hash.js');
-var db = require('./database.js');
 var validate = require('./validate.js');
 
 function login(req, res, next) {
@@ -15,7 +14,7 @@ function login(req, res, next) {
   })(req, res, next);
 }
 
-exports.init = app => {
+exports.init = (app, db) => {
   app.use(passport.initialize());
   app.use(passport.session());
 
@@ -49,9 +48,9 @@ exports.init = app => {
     };
     if (!validate.signup(user)) {
       res.status(401).json({
-        message: 'Missing credentials'
+        message: 'Invalid credentials'
       });
-      throw new Error('User input error');
+      return;
     }
     db.usernameTaken(user.username).then(taken => {
       if (taken) {

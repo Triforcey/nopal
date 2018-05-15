@@ -1,5 +1,4 @@
 var { MongoClient, ObjectID } = require('mongodb');
-var db;
 
 function setObjectId(object) {
   if (typeof object._id == 'undefined') return object;
@@ -17,31 +16,30 @@ exports.connect = options => {
     if (typeof url == 'undefined') url = 'mongodb://localhost';
     if (typeof dbName == 'undefined') dbName = 'nopal';
     MongoClient.connect(url).then((client) => {
-      db = client.db(dbName);
-      resolve(db);
-    });
-  });
-};
-
-exports.saveUser = user => {
-  return new Promise((resolve, reject) => {
-    db.collection('users').save(user).then(resolve);
-  });
-};
-
-exports.getUser = user => {
-  return new Promise((resolve, reject) => {
-    var objectId = user._id;
-    user = setObjectId(user);
-    if (user == null) reject(new Error(`Invalid ObjectID: ${objectId}`));
-    db.collection('users').findOne(user).then(resolve);
-  });
-};
-
-exports.usernameTaken = name => {
-  return new Promise((resolve, reject) => {
-    var size = db.collection('users').find({ username: name }).limit(1).count().then(count => {
-      resolve(count ? true : false);
+      var db = client.db(dbName);
+      resolve({
+        db: db,
+        saveUser: user => {
+          return new Promise((resolve, reject) => {
+            db.collection('users').save(user).then(resolve);
+          });
+        },
+        getUser: user => {
+          return new Promise((resolve, reject) => {
+            var objectId = user._id;
+            user = setObjectId(user);
+            if (user == null) reject(new Error(`Invalid ObjectID: ${objectId}`));
+            db.collection('users').findOne(user).then(resolve);
+          });
+        },
+        usernameTaken: name => {
+          return new Promise((resolve, reject) => {
+            var size = db.collection('users').find({ username: name }).limit(1).count().then(count => {
+              resolve(count ? true : false);
+            });
+          });
+        }
+      });
     });
   });
 };

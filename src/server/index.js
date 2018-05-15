@@ -58,13 +58,13 @@ db.connect({
       secure: process.env.SECURE == 'true' ? true : false
     },
     store: new MongoStore({
-      db: db
+      db: db.db
     })
   }));
 
   app.use(express.static('public'));
 
-  auth.init(app);
+  auth.init(app, db);
 
   app.use('/api', (req, res) => {
     api(req).then(data => {
@@ -90,8 +90,8 @@ db.connect({
   });
 
   app.use((err, req, res, next) => {
-    res.status(500).send('500');
     console.error(err);
+    res.status(500).send('500');
   });
 
   server.listen(port, function () {
