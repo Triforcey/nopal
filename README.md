@@ -52,9 +52,31 @@ npm start
 
 ### Other options
 
+#### Production
+
 ```bash
-export PORT=someport # Default: 3000
-# To run in production mode:
 export NODE_ENV=production # Default: Empty
 npm run build
+```
+
+Production mode will minify bundle.js and do everything else you'd expect it do do.
+
+#### Security
+
+When running behind a secure reverse proxy set the following values:
+
+```bash
+export SECURE=true # Default: false
+# Required if SECURE is set to true:
+export SESSION_SECRETS=comma,seperated,secrets
+```
+
+Only the first secret will be used for new sessions, the rest will be used to read old sessions.
+
+Running in secure mode will trust reverse proxies, redirect HTTP to HTTPS, set secure HTTP headers properly, and use the provided session secrets.
+
+#### Other
+
+```bash
+export PORT=someport # Default: 3000
 ```
