@@ -13,9 +13,11 @@ function setObjectId(object) {
 exports.connect = options => {
   return new Promise((resolve, reject) => {
     var {url, dbName} = options;
-    if (typeof url == 'undefined') url = 'mongodb://localhost';
+    if (typeof url == 'undefined') url = 'mongodb://localhost:27017';
     if (typeof dbName == 'undefined') dbName = 'nopal';
-    MongoClient.connect(url).then((client) => {
+    MongoClient.connect(url, {
+      useNewUrlParser: true
+    }).then((client) => {
       var db = client.db(dbName);
       resolve({
         db: db,
