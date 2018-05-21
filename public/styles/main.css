@@ -15,7 +15,9 @@ html, body {
 }
 
 body {
-  margin: 20px;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 20px;
   background: var(--linen);
   color: var(--black);
   font-family: 'Roboto', sans-serif;
