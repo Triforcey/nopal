@@ -1,5 +1,5 @@
 var React = require('react');
-var Nav = require('./nav.js');
+var Nav = require('./nav.jsx');
 
 module.exports = class Toolbar extends React.Component {
   render() {
