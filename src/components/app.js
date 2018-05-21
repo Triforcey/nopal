@@ -3,6 +3,7 @@ var Home = require('./home.js');
 var Login = require('./login.js');
 var Logout = require('./logout.js');
 var Clock = require('./clock.js');
+var Toolbar = require('./toolbar.js');
 var { BrowserRouter, Switch, Route, Link, withRouter, Redirect } = require('react-router-dom');
 var path = require('path');
 class App extends React.Component {
@@ -36,13 +37,14 @@ class App extends React.Component {
   render() {
     return (
       <div>
-        <ul>
+        {/*<ul>
           <li><Link to='/'>Home</Link></li>
           <li><Link to='/login'>Login</Link></li>
           <li><Link to='/signup'>Sign up</Link></li>
           <li><Link to='/logout'>Logout</Link></li>
           <li><Link to='/clock'>Clock</Link></li>
-        </ul>
+        </ul>*/}
+        <Toolbar />
         <Route component={() => (
           <p>{typeof this.state.data != 'undefined' ? this.state.data : '...'}</p>
         )} />
