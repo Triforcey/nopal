@@ -1,8 +1,22 @@
+require('babel-register')({
+  extensions: ['.jsx'],
+  presets: ['react']
+});
+
 var path = require('path');
-var db = require('./database.js');
+var db = require('./server/database.js');
 
 var express = require('express');
 var app = express();
+
+if (process.env.NODE_ENV == 'production') {
+  app.use('/scripts', express.static('dist/scripts'));
+} else {
+  let webpack = require('webpack');
+  let middleware = require('webpack-dev-middleware');
+  let config = require('./webpack.config.js');
+  app.use('/scripts', middleware(webpack(config)));
+}
 
 var helmet = require('helmet');
 
@@ -29,7 +43,7 @@ var session = require('express-session');
 
 var MongoStore = require('connect-mongo')(session);
 
-var auth = require('./auth.js');
+var auth = require('./server/auth.js');
 
 var mustacheExpress = require('mustache-express');
 app.engine('mustache', mustacheExpress());
@@ -40,9 +54,9 @@ var server = require('http').createServer(app);
 var React = require('react');
 var reactDOMServer = require('react-dom/server');
 var { StaticRouter } = require('react-router');
-var App = require('../components/app.js');
+var App = require('./src/components/app.jsx');
 
-var api = require('./api.js');
+var api = require('./server/api.js');
 
 var port = process.env.PORT || 3000;
 
@@ -76,9 +90,10 @@ db.connect({
     api(req).then(data => {
       var context = {};
       var router = reactDOMServer.renderToString(
-        <StaticRouter location={req.url} context={context}>
-          <App data={data} />
-        </StaticRouter>
+        React.createElement(StaticRouter, {
+          location: req.url,
+          context: context
+        }, React.createElement(App, { data: data }))
       );
       if (context.url) {
         res.redirect(context.status, context.url);

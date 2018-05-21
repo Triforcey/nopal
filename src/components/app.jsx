@@ -1,8 +1,8 @@
 var React = require('react');
-var Home = require('./home.js');
-var Login = require('./login.js');
-var Logout = require('./logout.js');
-var Clock = require('./clock.js');
+var Home = require('./home.jsx');
+var Login = require('./login.jsx');
+var Logout = require('./logout.jsx');
+var Clock = require('./clock.jsx');
 var { BrowserRouter, Switch, Route, Link, withRouter, Redirect } = require('react-router-dom');
 var path = require('path');
 class App extends React.Component {

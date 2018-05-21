@@ -2,10 +2,10 @@
   "name": "nopal",
   "version": "0.0.0",
   "description": "My new portfolio, coming soon.",
-  "main": "dist/server/index.js",
+  "main": "index.js",
   "scripts": {
-    "start": "node dist/server/index.js",
-    "build": "node build.js && webpack",
+    "start": "node index.js",
+    "build": "webpack",
     "install": "npm run build",
     "test": "nodemon"
   },
@@ -21,9 +21,9 @@
   "homepage": "https://github.com/Triforcey/nopal#readme",
   "dependencies": {
     "ajv": "^6.5.0",
-    "babel-core": "^6.26.3",
     "babel-loader": "^7.1.4",
     "babel-preset-react": "^6.24.1",
+    "babel-register": "^6.26.0",
     "bcrypt": "^2.0.1",
     "body-parser": "^1.18.3",
     "connect-mongo": "^2.0.1",
@@ -44,16 +44,14 @@
     "webpack-merge": "^4.1.2"
   },
   "devDependencies": {
-    "nodemon": "^1.17.4"
+    "nodemon": "^1.17.4",
+    "webpack-dev-middleware": "^3.1.3"
   },
   "nodemonConfig": {
     "ignore": [
-      "dist",
-      "public/scripts"
+      "src",
+      "dist"
     ],
-    "execMap": {
-      "js": "npm run build && node"
-    },
     "ext": "js,json,mustache"
   }
 }

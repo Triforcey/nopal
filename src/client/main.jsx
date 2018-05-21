@@ -1,7 +1,7 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
 var {BrowserRouter, Route, Link} = require('react-router-dom');
-var App = require('../components/app.js');
+var App = require('../components/app.jsx');
 var path = require('path');
 fetch(path.join('/api', location.pathname), {
   credentials: 'same-origin'

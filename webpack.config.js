@@ -2,17 +2,20 @@ var merge = require('webpack-merge');
 var dev = require('./webpack.dev.js');
 var prod = require('./webpack.prod.js');
 var path = require('path');
+var dist = path.join(__dirname, 'dist');
 var production = process.env.NODE_ENV == 'production';
+var env = production ? prod : dev;
+
 var config = {
-  entry: './src/client/main.js',
+  entry: './src/client/main.jsx',
   output: {
     filename: 'bundle.js',
-    path: path.join(__dirname, 'public/scripts')
+    path: path.join(__dirname, 'dist/scripts')
   },
   module: {
     rules: [
       {
-        test: /\.js$/,
+        test: /\.jsx$/,
         exclude: /node_modules/,
         use: {
           loader: 'babel-loader',
@@ -25,4 +28,4 @@ var config = {
   }
 };
 
-module.exports = merge(production ? prod : dev, config);
+module.exports = merge(config, env);
