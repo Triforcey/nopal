@@ -37,13 +37,6 @@ class App extends React.Component {
   render() {
     return (
       <div>
-        {/*<ul>
-          <li><Link to='/'>Home</Link></li>
-          <li><Link to='/login'>Login</Link></li>
-          <li><Link to='/signup'>Sign up</Link></li>
-          <li><Link to='/logout'>Logout</Link></li>
-          <li><Link to='/clock'>Clock</Link></li>
-        </ul>*/}
         <Toolbar />
         <Route component={() => (
           <p>{typeof this.state.data != 'undefined' ? this.state.data : '...'}</p>

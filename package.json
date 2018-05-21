@@ -49,9 +49,9 @@
   },
   "nodemonConfig": {
     "ignore": [
-      "src",
+      "src/client",
       "dist"
     ],
-    "ext": "js,json,mustache"
+    "ext": "js,jsx,json,mustache"
   }
 }
