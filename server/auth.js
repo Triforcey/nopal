@@ -2,6 +2,7 @@ var passport = require('passport');
 var LocalStategy = require('passport-local').Strategy;
 var hash = require('./hash.js');
 var validate = require('./validate.js');
+var User = require('./user.js');
 
 function login(req, res, next) {
   passport.authenticate('local', (err, user, info) => {
@@ -19,14 +20,22 @@ exports.init = (app, db) => {
   app.use(passport.session());
 
   passport.use(new LocalStategy((username, password, done) => {
-    db.getUser({username: username}).then(user => {
+    db.getUser({ username: username }).then(user => {
       if (user == null) {
-        done(null, false, { message: 'Invalid username' });
-        return;
+        let err = new User.Error('Invalid username');
+        done(null, false, err);
+        throw err;
       }
       hash.verify(password, user.password).then(verified => {
-        if (!verified) return done(null, false, { message: 'Incorrect password' });
+        if (!verified) {
+          let err = new User.Error('Incorrect password');
+          done(null, false, err);
+          throw err;
+        }
         done(null, user);
+      }).catch(err => {
+        if (err instanceof User.Error) return;
+        throw err;
       });
     });
   }));
@@ -36,7 +45,13 @@ exports.init = (app, db) => {
   });
 
   passport.deserializeUser(function(id, done) {
-    db.getUser({_id: id}).then(user => {
+    var projection = {};
+    for (var i = 0; i < User.secretValues.length; i++) {
+      projection[User.secretValues[i]] = false;
+    }
+    db.getUser({ _id: id }, {
+      fields: projection
+    }).then(user => {
       done(null, user);
     });
   });
@@ -76,5 +91,10 @@ exports.init = (app, db) => {
   app.get('/logout', (req, res) => {
     req.logout();
     res.redirect('/');
+  });
+
+  app.get('/user', (req, res) => {
+    if (!req.user) return res.status(401).json(new User.Error('Not logged in'));
+    res.json(req.user);
   });
 };

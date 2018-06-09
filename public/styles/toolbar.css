@@ -1,3 +1,14 @@
 .toolbar {
   font-size: 1.2em;
+  height: 25px;
+  display: flex;
+}
+
+.nav a:not(:last-child),
+.nav span:not(:last-child) {
+  margin-right: 10px;
+}
+
+.user {
+  margin-left: auto;
 }

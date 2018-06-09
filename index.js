@@ -93,7 +93,7 @@ db.connect({
         React.createElement(StaticRouter, {
           location: req.url,
           context: context
-        }, React.createElement(App, { data: data }))
+        }, React.createElement(App, { data: data, user: req.user }))
       );
       if (context.url) {
         res.redirect(context.status, context.url);
