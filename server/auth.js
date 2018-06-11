@@ -5,11 +5,11 @@ var validate = require('./validate.js');
 var User = require('./user.js');
 var RememberMe = require('./remember-me.js');
 
-exports.init = (app, db) => {
+exports.init = (app, db, secure) => {
   app.use(passport.initialize());
   app.use(passport.session());
 
-  var rememberMe = RememberMe.connect(app, passport, db, parseInt(process.env.COOKIE_MAX_AGE) || 604800000);
+  var rememberMe = RememberMe.connect(app, passport, db, parseInt(process.env.COOKIE_MAX_AGE) || 604800000, secure);
 
   function login(req, res, next) {
     passport.authenticate('local', (err, user, info) => {

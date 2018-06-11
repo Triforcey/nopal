@@ -22,7 +22,9 @@ var helmet = require('helmet');
 
 var sessionSecret = 'keyboard cat';
 
+var secure = false;
 if (process.env.SECURE == 'true') {
+  secure = true;
   app.use(helmet());
   app.set('trust proxy', true);
   sessionSecret = process.env.SESSION_SECRETS.split(',');
@@ -74,7 +76,7 @@ db.connect({
     resave: false,
     saveUninitialized: false,
     cookie: {
-      secure: process.env.SECURE == 'true' ? true : false
+      secure: secure
     },
     store: new MongoStore({
       db: db.db
@@ -83,7 +85,7 @@ db.connect({
 
   app.use(express.static('public'));
 
-  auth.init(app, db);
+  auth.init(app, db, secure);
 
   app.use('/api', (req, res) => {
     api(req).then(data => {
