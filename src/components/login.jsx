@@ -6,6 +6,7 @@ class Login extends React.Component {
     this.state = {
       name: '',
       pwd: '',
+      rememberMe: true,
       err: ''
     };
     this.handleChange = this.handleChange.bind(this);
@@ -13,7 +14,8 @@ class Login extends React.Component {
   }
   handleChange(e) {
     var newState = {};
-    newState[e.target.name] = e.target.value;
+    var value = e.target.type == 'checkbox' ? e.target.checked : e.target.value;
+    newState[e.target.name] = value;
     this.setState(newState);
   }
   send() {
@@ -21,7 +23,8 @@ class Login extends React.Component {
       method: 'post',
       body: JSON.stringify({
         username: this.state.name,
-        password: this.state.pwd
+        password: this.state.pwd,
+        rememberMe: this.state.rememberMe
       }),
       headers: {
         'content-type': 'application/json'
@@ -43,6 +46,7 @@ class Login extends React.Component {
       <div>
         <input name='name' value={this.state.name} onChange={this.handleChange} />
         <input name='pwd' type='password' value={this.state.pwd} onChange={this.handleChange} />
+        <input name='rememberMe' type='checkbox' checked={this.state.rememberMe} onChange={this.handleChange} />
         <button onClick={this.send}>{this.props.signup ? 'Sign Up' : 'Login'}</button>
         <p>{this.state.err}</p>
       </div>

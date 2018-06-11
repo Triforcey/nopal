@@ -3,21 +3,31 @@ var LocalStategy = require('passport-local').Strategy;
 var hash = require('./hash.js');
 var validate = require('./validate.js');
 var User = require('./user.js');
-
-function login(req, res, next) {
-  passport.authenticate('local', (err, user, info) => {
-    if (err) return next(err);
-    if (!user) return res.status(401).json(info);
-    req.login(user, err => {
-      if (err) return next(err);
-      res.end();
-    });
-  })(req, res, next);
-}
+var RememberMe = require('./remember-me.js');
 
 exports.init = (app, db) => {
   app.use(passport.initialize());
   app.use(passport.session());
+
+  var rememberMe = RememberMe.connect(app, passport, db, parseInt(process.env.COOKIE_MAX_AGE) || 604800000);
+
+  function login(req, res, next) {
+    passport.authenticate('local', (err, user, info) => {
+      if (err) return next(err);
+      if (!user) return res.status(401).json(info);
+      new Promise(function(resolve, reject) {
+        req.login(user, err => {
+          if (err) return reject(err);
+          resolve();
+        });
+      }).then(() => {
+        if (!req.body.rememberMe) return res.end();
+        rememberMe.saveToken(user._id, res).then(() => {
+          res.end();
+        });
+      }).catch(next);
+    })(req, res, next);
+  }
 
   passport.use(new LocalStategy((username, password, done) => {
     db.getUser({ username: username }).then(user => {
@@ -90,6 +100,7 @@ exports.init = (app, db) => {
 
   app.get('/logout', (req, res) => {
     req.logout();
+    res.clearCookie('remember_me');
     res.redirect('/');
   });
 

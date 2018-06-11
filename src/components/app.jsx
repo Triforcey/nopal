@@ -37,7 +37,6 @@ class App extends React.Component {
     this.unlisten();
   }
   getUser() {
-    console.log('Getting user...');
     fetch('/user', {
       credentials: 'same-origin'
     }).then(res => {
@@ -46,7 +45,6 @@ class App extends React.Component {
       });
       return res.json();
     }).then(data => {
-      console.log('Got user!', data);
       this.setState({
         user: data
       });

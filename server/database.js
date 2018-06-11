@@ -10,6 +10,12 @@ function setObjectId(object) {
   return object;
 }
 
+class NotFoundError {
+  constructor(msg) {
+    this.message = msg;
+  }
+}
+
 exports.connect = options => {
   return new Promise((resolve, reject) => {
     var { url, dbName } = options;
@@ -19,11 +25,13 @@ exports.connect = options => {
       useNewUrlParser: true
     }).then((client) => {
       var db = client.db(dbName);
+      var users = db.collection('users');
+      var rememberMeTokens = db.collection('rememberMeTokens');
       resolve({
         db: db,
         saveUser: user => {
           return new Promise((resolve, reject) => {
-            db.collection('users').save(user).then(resolve);
+            users.insertOne(user).then(resolve);
           });
         },
         getUser: (user, options) => {
@@ -31,15 +39,42 @@ exports.connect = options => {
             var objectId = user._id;
             setObjectId(user);
             if (user == null) reject(new Error(`Invalid ObjectID: ${objectId}`));
-            db.collection('users').findOne(user, options).then(resolve);
+            users.findOne(user, options).then(resolve);
           });
         },
         usernameTaken: name => {
           return new Promise((resolve, reject) => {
-            var size = db.collection('users').find({ username: name }).limit(1).count().then(count => {
+            users.find({ username: name }).limit(1).count().then(count => {
               resolve(count ? true : false);
             });
           });
+        },
+        rememberMeTokens: {
+          setTTL: (milliseconds) => {
+            rememberMeTokens.ensureIndex({ createdAt: 1 }, { expireAfterSeconds: milliseconds / 1000 });
+          },
+          save: (id, token) => {
+            return rememberMeTokens.insertOne({
+              user: id,
+              token: token,
+              createdAt: new Date()
+            });
+          },
+          consume: token => {
+            return new Promise((resolve, reject) => {
+              rememberMeTokens.findOneAndDelete({ token: token }).then(result => {
+                result = result.value;
+                if (!result) {
+                  resolve(null);
+                  throw new NotFoundError('No such token');
+                }
+                return users.findOne({ _id: result.user });
+              }).then(resolve).catch(err => {
+                if (err instanceof NotFoundError) return;
+                throw err;
+              });
+            });
+          }
         }
       });
     });

@@ -39,6 +39,11 @@ var bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+var cookieParser = require('cookie-parser')
+app.use(cookieParser(sessionSecret, {
+  secure: process.env.SECURE == 'true' ? true : false
+}));
+
 var session = require('express-session');
 
 var MongoStore = require('connect-mongo')(session);
