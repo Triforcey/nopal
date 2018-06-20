@@ -19,11 +19,9 @@ class NotFoundError {
 exports.connect = options => {
   return new Promise((resolve, reject) => {
     var { url, dbName } = options;
-    if (typeof url == 'undefined') url = 'mongodb://localhost:27017';
+    if (typeof url == 'undefined') url = 'mongodb://localhost';
     if (typeof dbName == 'undefined') dbName = 'nopal';
-    MongoClient.connect(url, {
-      useNewUrlParser: true
-    }).then((client) => {
+    MongoClient.connect(url).then((client) => {
       var db = client.db(dbName);
       var users = db.collection('users');
       var rememberMeTokens = db.collection('rememberMeTokens');
