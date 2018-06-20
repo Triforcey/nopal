@@ -1,6 +1,7 @@
-var Uuid = require('./uuid.js');
-var crypto = require('./crypto.js');
+var Uuid = require('../uuid.js');
+var crypto = require('../crypto.js');
 var RememberMeStrategy = require('passport-remember-me').Strategy;
+
 function createToken() {
   return new Promise((resolve, reject) => {
     var uuid = Uuid.createUUID();
@@ -10,6 +11,7 @@ function createToken() {
     });
   });
 }
+
 exports.connect = (app, passport, db, maxAge, secure) => {
   var tokens = db.rememberMeTokens;
   var cookieOptions = {

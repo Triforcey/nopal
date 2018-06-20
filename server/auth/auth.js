@@ -1,8 +1,8 @@
 var passport = require('passport');
 var LocalStategy = require('passport-local').Strategy;
-var hash = require('./hash.js');
-var validate = require('./validate.js');
-var User = require('./user.js');
+var hash = require('../hash.js');
+var validate = require('../validate.js');
+var User = require('../user.js');
 var RememberMe = require('./remember-me.js');
 
 exports.init = (app, db, secure) => {

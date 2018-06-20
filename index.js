@@ -41,16 +41,16 @@ var bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-var cookieParser = require('cookie-parser')
+var cookieParser = require('cookie-parser');
 app.use(cookieParser(sessionSecret, {
-  secure: process.env.SECURE == 'true' ? true : false
+  secure: secure
 }));
 
 var session = require('express-session');
 
 var MongoStore = require('connect-mongo')(session);
 
-var auth = require('./server/auth.js');
+var auth = require('./server/auth/auth.js');
 
 var mustacheExpress = require('mustache-express');
 app.engine('mustache', mustacheExpress());
