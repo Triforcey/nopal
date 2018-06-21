@@ -29,6 +29,7 @@ exports.connect = options => {
         db: db,
         saveUser: user => {
           return new Promise((resolve, reject) => {
+            user.admin = false;
             users.insertOne(user).then(resolve);
           });
         },
@@ -36,7 +37,7 @@ exports.connect = options => {
           return new Promise((resolve, reject) => {
             var objectId = user._id;
             setObjectId(user);
-            if (user == null) reject(new Error(`Invalid ObjectID: ${objectId}`));
+            if (user == null) return reject(new Error('Invalid ObjectID'));
             users.findOne(user, options).then(resolve);
           });
         },
