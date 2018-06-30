@@ -4,8 +4,8 @@
   display: flex;
 }
 
-.nav a:not(:last-child),
-.nav span:not(:last-child) {
+.nav a,
+.nav span {
   margin-right: 10px;
 }
 
