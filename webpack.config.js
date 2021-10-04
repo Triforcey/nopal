@@ -1,4 +1,4 @@
-var merge = require('webpack-merge');
+var { merge } = require('webpack-merge');
 var dev = require('./webpack.dev.js');
 var prod = require('./webpack.prod.js');
 var path = require('path');
@@ -20,7 +20,7 @@ var config = {
         use: {
           loader: 'babel-loader',
           options: {
-            presets: ['react']
+            presets: ['@babel/react']
           }
         }
       }

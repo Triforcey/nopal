@@ -1,4 +1,4 @@
-var uuid = require('uuid/v4');
+const { v4: uuid } = require('uuid');
 exports.createUUID = () => {
   return new Promise((resolve, reject) => {
     resolve(uuid());

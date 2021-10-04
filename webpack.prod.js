@@ -1,8 +1,9 @@
 var webpack = require('webpack');
-var UglifyJSPlugin = require('uglifyjs-webpack-plugin');
+const TerserPlugin = require("terser-webpack-plugin");
 module.exports = {
   mode: 'production',
-  plugins: [
-    new UglifyJSPlugin()
-  ]
+  optimizaiton: {
+    minimize: true,
+    minimizer: [new TerserPlugin()]
+  }
 };

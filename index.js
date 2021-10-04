@@ -48,7 +48,7 @@ app.use(cookieParser(sessionSecret, {
 
 var session = require('express-session');
 
-var MongoStore = require('connect-mongo')(session);
+var MongoStore = require('connect-mongo');
 
 var auth = require('./server/auth/auth.js');
 
@@ -78,7 +78,7 @@ db.connect({
     cookie: {
       secure: secure
     },
-    store: new MongoStore({
+    store: MongoStore.create({
       db: db.db
     })
   }));
