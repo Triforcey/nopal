@@ -67,10 +67,11 @@ var api = require('./server/api.js');
 
 var port = process.env.PORT || 3000;
 
-db.connect({
+let clientPromise = db.connect({
   url: process.env.DB_URL,
   dbName: process.env.DB_NAME
-}).then(db => {
+});
+clientPromise.then(db => {
   app.use(session({
     secret: sessionSecret,
     resave: false,
@@ -78,9 +79,7 @@ db.connect({
     cookie: {
       secure: secure
     },
-    store: MongoStore.create({
-      db: db.db
-    })
+    store: MongoStore.create({ mongoUrl: process.env.DB_URL })
   }));
 
   app.use(express.static('public'));

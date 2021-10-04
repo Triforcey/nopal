@@ -50,7 +50,7 @@ exports.connect = options => {
         },
         rememberMeTokens: {
           setTTL: (milliseconds) => {
-            rememberMeTokens.ensureIndex({ createdAt: 1 }, { expireAfterSeconds: milliseconds / 1000 });
+            rememberMeTokens.createIndex({ createdAt: 1 }, { expireAfterSeconds: milliseconds / 1000 });
           },
           save: (id, token) => {
             return rememberMeTokens.insertOne({
